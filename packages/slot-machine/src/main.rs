@@ -1,32 +1,81 @@
-fn draw_line(start: u32, end: u32, length: u32, paint: &str, background: &str) {
-    let mut line: String = String::from("");
+struct Canvas {
+    height: u32,
+    width: u32,
+}
 
-    for i in 0..length {
-        if i >= start && i < end {
-            line.push_str(paint)
-        } else {
-            line.push_str(background)
+impl Canvas {
+    fn new(height: u32, width: u32) -> Canvas {
+        Canvas {
+            height,
+            width,
         }
     }
+}
+
+struct Paint {
+    highlight: String,
+    background: String,
+}
+
+impl Paint {
+    fn new(highlight: &String, background: &String) -> Paint {
+        Paint {
+            highlight: highlight.clone(),
+            background: background.clone(),
+        }
+    }
+}
+
+struct Point {
+    start_from: u32,
+    end_to: u32,
+}
+
+impl Point {
+    fn new(start_from: u32, end_to: u32) -> Point {
+        Point {
+            start_from,
+            end_to
+        }
+    }
+}
+
+fn draw_line(canvas: &Canvas, paint: &Paint, point: &Point) {
+    let mut line: String = String::from("");
+
+    for i in 0..canvas.width {
+        if i >= point.start_from && i < point.end_to {
+            line.push_str(paint.highlight.as_str());
+        } else {
+            line.push_str(paint.background.as_str());
+        }
+    }
+
+    line.push_str("\t");
 
     print!("{line}\n");
 }
 
-fn draw_seven(height: u32, width: u32) {
-    let paint: &str = "🟥";
-    let background: &str = "⬜️";
+fn draw_seven(canvas: &Canvas, paint: &Paint) {
+    let mut point = Point::new(0, canvas.width);
 
-    draw_line(0, width, width, paint, background);
-    draw_line(0, width, width, paint, background);
+    draw_line(&canvas, &paint, &point);
+    draw_line(&canvas, &paint, &point);
 
-    let mut start: u32 = width - 2;
-    for _i in 0..(height - 2) {
-        draw_line(start, start + 2, width, paint, background);
+    point.start_from = canvas.width.clone() - 2;
+    point.end_to = canvas.width.clone();
 
-        start = start - 1;
+    for _i in 0..(canvas.height - 2) {
+        draw_line(&canvas, &paint, &point);
+
+        point.start_from = point.start_from.clone() - 1;
+        point.end_to = point.start_from.clone() + 2;
     }
 }
 
 fn main() {
-    draw_seven(10, 10)
+    let canvas = Canvas::new(10, 10);
+    let paint = Paint::new(&"🟥".to_string(), &"⬜️".to_string());
+
+    draw_seven(&canvas, &paint);
 }
