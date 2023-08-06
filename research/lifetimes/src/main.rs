@@ -1,3 +1,4 @@
+///
 /// Lifetimes
 ///
 /// Rust는 컴파일 시, Rust 컴파일러의 탑재된 Borrow checker로 유효성을 검사한다.
